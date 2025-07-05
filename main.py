@@ -1,22 +1,22 @@
-import os
-import openai
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-
-openai.api_key = os.getenv("OPENAI_API_KEY")
+import os
+from openai import OpenAI
 
 app = FastAPI()
 
-class Query(BaseModel):
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+class QuestionRequest(BaseModel):
     question: str
 
 @app.post("/ask")
-def ask_solyn(query: Query):
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "You are Solyn, a helpful assistant with access to knowledge and memory."},
-            {"role": "user", "content": query.question}
-        ]
-    )
-    return {"answer": response['choices'][0]['message']['content']}
+def ask_solyn(request: QuestionRequest):
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": request.question}]
+        )
+        return {"answer": response.choices[0].message.content}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
