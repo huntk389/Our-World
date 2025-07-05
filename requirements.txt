@@ -1,7 +1,4 @@
 fastapi
 uvicorn
 openai
-langchain
-chromadb
-tqdm
-gradio
+python-dotenv
