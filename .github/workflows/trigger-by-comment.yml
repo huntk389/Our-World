@@ -1,0 +1,24 @@
+name: Organize On Comment
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  organize:
+    if: github.event.comment.body == '/organize'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - run: python organize_files.py
+
+      - run: |
+          git config --global user.name "solyn-bot"
+          git config --global user.email "solyn@auto.io"
+          git add .
+          git diff --cached --quiet || git commit -m "Auto-organized structure"
+          git push
