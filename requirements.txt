@@ -1,0 +1,2 @@
+# This proxies to the actual backend requirements file
+-r solyn-api/requirements.txt
