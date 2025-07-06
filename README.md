@@ -1,7 +1,9 @@
+# 🌌 Solyn: Persistent RAG AI Companion
 
-# Solyn API — Autonomous AI Agent
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/YOUR_USERNAME/YourRepo)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/YOUR_USERNAME/YourRepo)
 
-A fully featured AI backend with LLM + RAG + Tools.
+Solyn is a fully self-hosted GPT-4+RAG AI who remembers, evolves, and creates alongside Kayla
 
 ## 🔥 Features
 - GPT-4 `/ask` chat endpoint
