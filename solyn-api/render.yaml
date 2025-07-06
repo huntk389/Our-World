@@ -1,10 +1,12 @@
-
 services:
   - type: web
     name: solyn-api
-    runtime: python
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port 10000
+    env: python
+    buildCommand: "python3 organize_files.py && cd solyn-api && pip install -r requirements.txt"
+    startCommand: "cd solyn-api && uvicorn main:app --host=0.0.0.0 --port=10000"
     envVars:
       - key: OPENAI_API_KEY
         sync: false
+    plan: free
+    autoDeploy: true
+    region: oregon
