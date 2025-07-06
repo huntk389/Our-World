@@ -4,3 +4,4 @@ uvicorn[standard]
 openai>=1.0.0
 langchain
 tiktoken
+requests
