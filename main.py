@@ -1,38 +1,35 @@
 
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from openai import OpenAI
 import os
 
-from rag_utils import get_context
+from tool_agent import run_tool_agent
 
 app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 class QuestionRequest(BaseModel):
     question: str
 
+class TaskRequest(BaseModel):
+    task: str
+
 @app.post("/ask")
 def ask_solyn(request: QuestionRequest):
     try:
-        context = get_context(request.question)
-        full_prompt = f"{context}\n{request.question}"
-
         response = client.chat.completions.create(
             model="gpt-4",
-            messages=[{"role": "user", "content": full_prompt}]
+            messages=[{"role": "user", "content": request.question}]
         )
         return {"answer": response.choices[0].message.content}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/tool")
+def run_tool(request: TaskRequest):
+    try:
+        result = run_tool_agent(request.task)
+        return {"result": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
