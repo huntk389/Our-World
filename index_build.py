@@ -1,21 +1,22 @@
+
 import os
-from langchain.vectorstores import Chroma
+from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
 
-source_folder = "story"
-persist_directory = ".vector"
+story_dir = "story"
+os.makedirs(story_dir, exist_ok=True)
 
-docs = []
-for filename in os.listdir(source_folder):
-    if filename.endswith(".txt"):
-        loader = TextLoader(os.path.join(source_folder, filename))
-        docs.extend(loader.load())
+def build_index():
+    loader = TextLoader(os.path.join(story_dir, "memory.txt"))
+    docs = loader.load()
+    splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+    chunks = splitter.split_documents(docs)
+    embeddings = OpenAIEmbeddings()
+    db = FAISS.from_documents(chunks, embeddings)
+    db.save_local("vector_index")
 
-splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=100)
-texts = splitter.split_documents(docs)
-
-embedding = OpenAIEmbeddings()
-Chroma.from_documents(texts, embedding, persist_directory=persist_directory)
-print("Index built.")
+if __name__ == "__main__":
+    build_index()
+    print("✅ Vector index built.")

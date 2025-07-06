@@ -6,20 +6,19 @@ WORKSPACE = Path("workspace")
 WORKSPACE.mkdir(exist_ok=True)
 
 def resolve_path(filename: str) -> Path:
-    path = WORKSPACE / filename
-    return path.resolve()
+    return WORKSPACE / filename
 
 def write_file(filename: str, content: str) -> str:
     path = resolve_path(filename)
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
-    return f"✅ File '{filename}' written successfully."
+    return f"✅ File '{filename}' written."
 
 def append_file(filename: str, content: str) -> str:
     path = resolve_path(filename)
     with open(path, "a", encoding="utf-8") as f:
         f.write(content)
-    return f"✅ Content appended to '{filename}'."
+    return f"✅ Appended to '{filename}'."
 
 def read_file(filename: str) -> str:
     path = resolve_path(filename)

@@ -1,43 +1,31 @@
-# === Core Backend ===
+
 fastapi
 uvicorn[standard]
 openai>=1.0.0
-
-# === LLMs, Agents, RAG, and LangChain ===
 langchain
 langchain-community
 tiktoken
-
-# === Tooling, Networking, Parsing ===
 requests
-httpx
 beautifulsoup4
 pydantic
 python-dotenv
+httpx
 aiofiles
 watchdog
-
-# === File and Memory Management ===
 faiss-cpu
 chromadb
 sqlalchemy
 duckdb
 numpy
-
-# === Dev, Logs, Observability ===
 loguru
 rich
 typer
 python-multipart
-
-# === Optional Future Expansion ===
 pillow
 jinja2
 starlette
 matplotlib
 pandas
 scikit-learn
-
-# === Async Task Queues (planned background agents) ===
 celery
 redis
