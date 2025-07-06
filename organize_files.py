@@ -21,6 +21,7 @@ ROOT_LOCKED = {
     "organize_files.py",       # This script
     "render.yaml",             # Render deploy config
     "solyn_ui.py",             # Frontend helper
+    "main.py",                 # App entry point
 }
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
