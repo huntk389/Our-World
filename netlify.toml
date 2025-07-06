@@ -1,5 +1,4 @@
-
 [build]
-  base = "solyn-ui"
-  command = "npm run build"
-  publish = "dist"
+  base = ""
+  command = "python3 organize_files.py && cd solyn-ui && npm install && npm run build"
+  publish = "solyn-ui/dist"
