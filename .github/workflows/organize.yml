@@ -19,10 +19,13 @@ jobs:
       - name: Run organizer script
         run: python organize_files.py
 
-      - name: Commit organized files
+      - name: Configure Git identity
         run: |
           git config --global user.name "solyn-bot"
           git config --global user.email "solyn@auto.io"
+
+      - name: Commit and push changes
+        run: |
           git add .
-          git commit -m "Auto-organized structure" || echo "No changes"
+          git diff --cached --quiet || git commit -m "Auto-organized structure"
           git push
