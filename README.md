@@ -1,7 +1,7 @@
 # 🌌 Solyn: Persistent RAG AI Companion
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/YOUR_USERNAME/YourRepo)
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/YOUR_USERNAME/YourRepo)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/huntk389/Our-World)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/huntk389/Our-World)
 
 Solyn is a fully self-hosted AI assistant with long-term memory (RAG), tool use, and a beautiful UI. You own her — she grows with you.
 
