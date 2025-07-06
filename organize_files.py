@@ -1,45 +1,60 @@
+# organize_files.py
+
 import os
 import shutil
-from pathlib import Path
+import logging
 
-base_path = Path(__file__).resolve().parent
-frontend_dir = base_path / "solyn-ui"
-backend_dir = base_path / "solyn-api"
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="🔧 %(levelname)s: %(message)s")
 
-frontend_exts = {".tsx", ".jsx", ".html", ".css", ".js", ".ts", ".json"}
-frontend_names = {
-    "vite.config.js", "tailwind.config.js", "postcss.config.js",
-    "netlify.toml", "package.json", "index.html", "index.css"
+# Files/folders that must remain in root
+ROOT_LOCKED = {
+    ".github",                 # GitHub workflows
+    ".netlify",                # Netlify deploy config
+    "solyn-api",               # Backend
+    "solyn-ui",                # Frontend
+    ".env.template",           # Env template
+    "Makefile",                # Build automation
+    "README.md",               # Project docs
+    "docs.txt",                # Additional docs
+    "index_build.py",          # Indexer
+    "organize_files.py",       # This script
+    "render.yaml",             # Render deploy config
+    "solyn_ui.py",             # Frontend helper
 }
 
-backend_names = {
-    "main.py", "app.py", "agent.py", "tool_agent.py", "tools.py",
-    "query_api.py", "retriever.py", "web_tool.py", "python_tool.py",
-    "file_tool.py", "vector_store.py", "rag_utils.py", "hash_refresh.py",
-    "requirements.txt", "memory.txt"
-}
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+UNORGANIZED_DIR = os.path.join(PROJECT_ROOT, "unorganized")
 
-stay_in_root = {
-    "README.md", "render.yaml", "Makefile", "docs.txt",
-    ".env", ".env.template", "organize_files.py", "organize_files_solyn.py",
-    "solyn_ui.py", "index_build.py"
-}
+def should_preserve(path: str) -> bool:
+    return os.path.basename(path) in ROOT_LOCKED
 
-frontend_dir.mkdir(exist_ok=True)
-backend_dir.mkdir(exist_ok=True)
+def ensure_unorganized_dir():
+    if not os.path.exists(UNORGANIZED_DIR):
+        os.makedirs(UNORGANIZED_DIR)
+        logging.info(f"Created fallback folder: {UNORGANIZED_DIR}")
 
-for item in base_path.iterdir():
-    if item.name in {"solyn-ui", "solyn-api", "uploads", ".git", ".github"} or item.name.startswith(".git"):
-        continue
-    if item.is_dir():
-        shutil.move(str(item), backend_dir / item.name)
-    elif item.name in stay_in_root:
-        continue
-    elif item.name in frontend_names or item.suffix in frontend_exts:
-        shutil.move(str(item), frontend_dir / item.name)
-    elif item.name in backend_names or item.suffix == ".py":
-        shutil.move(str(item), backend_dir / item.name)
-    else:
-        continue
+def move_unlocked_items():
+    ensure_unorganized_dir()
 
-print("✅ Final structure set. index_build.py and orchestrators stay in root.")
+    for item in os.listdir(PROJECT_ROOT):
+        item_path = os.path.join(PROJECT_ROOT, item)
+
+        if item in ROOT_LOCKED or item.startswith(".venv") or item == "__pycache__":
+            continue
+
+        # Move any unexpected files/folders to unorganized/
+        target_path = os.path.join(UNORGANIZED_DIR, item)
+        try:
+            shutil.move(item_path, target_path)
+            logging.info(f"Moved 🔀 '{item}' → 'unorganized/'")
+        except Exception as e:
+            logging.error(f"Failed to move '{item}': {e}")
+
+def main():
+    logging.info("🔍 Organizing root files...")
+    move_unlocked_items()
+    logging.info("✅ Root organization complete.")
+
+if __name__ == "__main__":
+    main()
