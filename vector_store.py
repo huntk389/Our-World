@@ -4,27 +4,24 @@ from pathlib import Path
 from langchain_community.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.document_loaders import TextLoader
+from langchain.document_loaders import TextLoader, DirectoryLoader
 
 VECTOR_DIR = "data/vector_index"
-MEMORY_FILE = "data/memory.txt"
+SOURCE_DIR = "story"
 
 def get_vectorstore():
-    # Load if index already exists
     if Path(VECTOR_DIR).exists():
         return FAISS.load_local(VECTOR_DIR, OpenAIEmbeddings(), allow_dangerous_deserialization=True)
 
-    # Otherwise rebuild from memory.txt
-    if not Path(MEMORY_FILE).exists():
-        raise FileNotFoundError(f"Missing context file: {MEMORY_FILE}")
+    if not Path(SOURCE_DIR).exists():
+        raise FileNotFoundError("No memory source directory found for RAG.")
 
-    loader = TextLoader(MEMORY_FILE)
+    loader = DirectoryLoader(SOURCE_DIR, glob="*.txt", loader_cls=TextLoader)
     docs = loader.load()
-
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    split_docs = text_splitter.split_documents(docs)
+    splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+    split_docs = splitter.split_documents(docs)
 
     embeddings = OpenAIEmbeddings()
-    vectorstore = FAISS.from_documents(split_docs, embeddings)
-    vectorstore.save_local(VECTOR_DIR)
-    return vectorstore
+    db = FAISS.from_documents(split_docs, embeddings)
+    db.save_local(VECTOR_DIR)
+    return db
