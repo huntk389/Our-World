@@ -2,7 +2,7 @@ import gradio as gr
 import requests
 
 def ask_solyn(prompt, dev_mode):
-    response = requests.post("https://your-render-app.onrender.com/query", json={
+    response = requests.post("https://solyn-api.onrender.com/query", json={
         "question": prompt,
         "dev_mode": dev_mode
     })
