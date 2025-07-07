@@ -1,4 +1,10 @@
+# netlify.toml
+
 [build]
-  base = "solyn_ui"
-  command = "npm run build"
-  publish = "dist"
+base = "solyn_ui"
+command = "npm run build"
+publish = "dist"
+
+# Optional: Disable Netlify Functions if not using them
+[functions]
+directory = "not_used"
